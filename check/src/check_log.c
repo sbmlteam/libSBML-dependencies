@@ -48,6 +48,7 @@ int c99_vsnprintf( char *str, size_t size, const char *format, va_list ap )
 	return _vscprintf( format, ap );
 }
 
+#if _MSC_VER != 1900
 int snprintf( char *str, size_t size, const char *format, ... )
 {
 	int retVal;
@@ -58,6 +59,7 @@ int snprintf( char *str, size_t size, const char *format, ... )
 
 	return retVal;
 }
+#endif
 
 #ifdef WIN32
 #include <Winsock2.h>
