@@ -39,6 +39,7 @@ if (WITH_STATIC_RUNTIME)
 		
 	endforeach(flag_var)
 	add_definitions( -D_MT)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif(WITH_STATIC_RUNTIME)
 
 file(GLOB XERCES_SOURCE
