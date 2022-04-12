@@ -4,3 +4,6 @@
 [submodule "libxml2"]
 	path = libxml2
 	url = https://gitlab.gnome.org/GNOME/libxml2.git
+[submodule "xerces-c"]
+	path = xerces-c
+	url = https://gitbox.apache.org/repos/asf/xerces-c.git

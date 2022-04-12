@@ -135,19 +135,15 @@ endif()
 
 
 option(WITH_LIBXML   "Compile libxml XML parser"          OFF )
+option(WITH_XERCES   "Compile xerces XML parser"          OFF )
 
 if (WIN32)
-option(WITH_XERCES   "Compile xerces XML parser"          ON )
-option(WITH_ICONV    "Compile libiconv"                   ON )
+option(WITH_ICONV    "Compile libiconv"                   OFF )
 
   if (WITH_ICONV)
   	add_subdirectory(libiconv)
   endif()
-  
-  
-  if (WITH_XERCES)
-  	add_subdirectory(xerces-c)
-  endif()
+
 endif()
 
 if (WITH_ZLIB)
@@ -175,7 +171,12 @@ if (WITH_LIBXML)
 
   add_subdirectory(libxml2)
 endif()
-  
+
+if (WITH_XERCES)
+  add_subdirectory(xerces-c)
+endif()
+
+
 
 
 ###############################################################################
