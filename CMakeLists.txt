@@ -134,7 +134,7 @@ if (WITH_EXPAT)
 endif()
 
 
-option(WITH_LIBXML   "Compile libxml XML parser"          ON )
+option(WITH_LIBXML   "Compile libxml XML parser"          OFF )
 
 if (WIN32)
 option(WITH_XERCES   "Compile xerces XML parser"          ON )
@@ -170,7 +170,7 @@ if (WITH_LIBXML)
 
   if (NOT HAVE_STDARG_H)
     # MSVC has no std arg so lets give libXML one
-	FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/stdarg.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/libxml2)
+    message(FATAL_ERROR "Cannot build libxml2 without stdarg.h, please set WITH_LIBXML=OFF")
   endif()
 
   add_subdirectory(libxml2)
