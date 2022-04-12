@@ -103,6 +103,17 @@ option(WITH_CHECK    "Compile libcheck unit test library" ON )
 option(WITH_EXPAT    "Compile Expat XML parser"           ON )
 option(WITH_ZLIB     "Compile zlib compression library"   ON )
 
+foreach(postfix_var
+  CMAKE_DEBUG_POSTFIX
+  CMAKE_RELEASE_POSTFIX
+  CMAKE_MINSIZEREL_POSTFIX
+  CMAKE_RELWITHDEBINFO_POSTFIX
+)
+  set (${postfix_var} "" CACHE STRING "no postfix please" FORCE)
+endforeach()
+
+
+
 if (WITH_BZIP2)
 	add_subdirectory(bzip2)
 endif()
@@ -118,21 +129,19 @@ if (WITH_EXPAT)
   set (EXPAT_BUILD_TOOLS OFF)
   set (EXPAT_BUILD_TOOLS OFF)
   set (EXPAT_MSVC_STATIC_CRT ${WITH_STATIC_RUNTIME})
+
   add_subdirectory(expat/expat)
 endif()
 
 
+option(WITH_LIBXML   "Compile libxml XML parser"          ON )
+
 if (WIN32)
 option(WITH_XERCES   "Compile xerces XML parser"          ON )
 option(WITH_ICONV    "Compile libiconv"                   ON )
-option(WITH_LIBXML   "Compile libxml XML parser"          ON )
 
   if (WITH_ICONV)
   	add_subdirectory(libiconv)
-  endif()
-  
-  if (WITH_LIBXML)
-  	add_subdirectory(libxml2)
   endif()
   
   
@@ -144,6 +153,29 @@ endif()
 if (WITH_ZLIB)
 	add_subdirectory(zlib)
 endif()
+
+
+if (WITH_LIBXML)
+  set (BUILD_SHARED_LIBS OFF)            # build static libraries
+  set (LIBXML2_WITH_ICONV OFF)           # disable iconv
+  set (LIBXML2_WITH_LZMA OFF)            # disable liblzma
+  set (LIBXML2_WITH_PYTHON OFF)          # disable Python
+  set (LIBXML2_WITH_ZLIB OFF)            # disable libz
+  set (LIBXML2_WITH_FTP OFF)
+  set (LIBXML2_WITH_FTP OFF)
+  set (LIBXML2_WITH_PROGRAMS OFF)
+  set (LIBXML2_WITH_TESTS OFF)
+
+  check_include_files(stdarg.h HAVE_STDARG_H)
+
+  if (NOT HAVE_STDARG_H)
+    # MSVC has no std arg so lets give libXML one
+	FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/stdarg.h DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/libxml2)
+  endif()
+
+  add_subdirectory(libxml2)
+endif()
+  
 
 
 ###############################################################################
