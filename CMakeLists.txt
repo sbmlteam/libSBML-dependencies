@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8...3.19.0)
 project(libsbml_dependencies)
 
 include (CMakeTestCCompiler)
@@ -112,7 +112,13 @@ if (WITH_CHECK)
 endif()
 
 if (WITH_EXPAT)
-	add_subdirectory(expat)
+  set (EXPAT_SHARED_LIBS OFF)
+  set (EXPAT_BUILD_EXAMPLES OFF)
+  set (EXPAT_BUILD_TESTS OFF)
+  set (EXPAT_BUILD_TOOLS OFF)
+  set (EXPAT_BUILD_TOOLS OFF)
+  set (EXPAT_MSVC_STATIC_CRT ${WITH_STATIC_RUNTIME})
+  add_subdirectory(expat/expat)
 endif()
 
 
@@ -212,6 +218,7 @@ else(UNIX)
 				
 			endforeach(flag_var)
 		add_definitions( -D_MT)
+		set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 		endif(WITH_STATIC_RUNTIME)
 	
 
