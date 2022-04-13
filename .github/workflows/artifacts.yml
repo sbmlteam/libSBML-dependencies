@@ -43,12 +43,19 @@ jobs:
       - name: Configure CMake
         shell: cmd
         working-directory: ${{runner.workspace}}/build
-        run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DLIBSEDML_DEPENDENCY_DIR=%GITHUB_WORKSPACE%/install_dependencies  -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\instdir -DWITH_LIBXML=ON -DWITH_XERCES=ON -DBUILD_SHARED_LIBS:BOOL=OFF -DEXPAT_MSVC_STATIC_CRT=${{matrix.static_runtime}}  %GITHUB_WORKSPACE%
+        run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\instdir -DWITH_LIBXML=ON -DWITH_XERCES=ON -DBUILD_SHARED_LIBS:BOOL=OFF -DEXPAT_MSVC_STATIC_CRT=${{matrix.static_runtime}}  %GITHUB_WORKSPACE%
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
         shell: bash
         run: cmake --build . --config ${{matrix.build_type}}
+           
+      - name: Install
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run:  | 
+          cmake --install . --config  ${{matrix.build_type}}
+          rm -f ${{runner.workspace}}/instdir/bin/*
            
       - name: Upload
         if: matrix.static_runtime == 'ON'
