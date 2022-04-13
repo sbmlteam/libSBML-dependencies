@@ -87,6 +87,25 @@ SET(CPACK_PACKAGE_VERSION "${PACKAGE_VERSION}")
 INCLUDE(CPack)
 
 
+if(MSVC)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
+  option(WITH_STATIC_RUNTIME "Compile using the static MSVC Runtime." OFF)
+  if(WITH_STATIC_RUNTIME)
+      foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
+
+          if(${flag_var} MATCHES "/MD")
+              string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+          endif(${flag_var} MATCHES "/MD")
+
+      endforeach(flag_var)
+      add_definitions( -D_MT)
+      set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  endif(WITH_STATIC_RUNTIME)
+endif()
 
 
 ###############################################################################
@@ -128,7 +147,10 @@ if (WITH_EXPAT)
   set (EXPAT_BUILD_TESTS OFF)
   set (EXPAT_BUILD_TOOLS OFF)
   set (EXPAT_BUILD_TOOLS OFF)
-  set (EXPAT_MSVC_STATIC_CRT ${WITH_STATIC_RUNTIME})
+  if (WITH_STATIC_RUNTIME)
+    #expat is overriding this
+    set(EXPAT_MSVC_STATIC_CRT ON CACHE BOOL "Use /MT flag (static CRT) when compiling in MSVC" FORCE)
+  endif()
 
   add_subdirectory(expat/expat)
 endif()
