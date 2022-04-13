@@ -1,0 +1,66 @@
+name: Build Artifacts
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        static_runtime: ["ON", "OFF"]
+        arch: ["x86", "x64"]
+        build_type: ["Release", "Debug"]
+        
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Optional, use if you use setuptools_scm
+          submodules: true  # Optional, use if you have submodules
+
+      - uses: seanmiddleditch/gha-setup-ninja@master
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{runner.workspace}}/build
+        
+      - name: Configure CMake
+        shell: cmd
+        working-directory: ${{runner.workspace}}/build
+        run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DLIBSEDML_DEPENDENCY_DIR=%GITHUB_WORKSPACE%/install_dependencies  -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\instdir -DWITH_LIBXML=ON -DWITH_XERCES=ON -DBUILD_SHARED_LIBS:BOOL=OFF -DEXPAT_MSVC_STATIC_CRT=${{matrix.static_runtime}}  %GITHUB_WORKSPACE%
+
+      - name: Build
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        run: cmake --build . --config ${{matrix.build_type}}
+           
+      - name: Upload
+        if: matrix.static_runtime == 'ON'
+        uses: actions/upload-artifact@v2
+        with:
+          path: instdir/*
+          name: libSBML-dependencies-${{ matrix.arch }}-${{ matrix.build_type }}-static
+        
+
+      - name: Upload
+        if: matrix.static_runtime == 'OFF'
+        uses: actions/upload-artifact@v2
+        with:
+          path: instdir/*
+          name: libSBML-dependencies-${{ matrix.arch }}-${{ matrix.build_type }}
