@@ -20,7 +20,7 @@ Table of contents
 Introduction
 ------------
 
-This project contains a number of open source libraries, that make the building of [libSBML](sbml.org/Software/libSBML "libSBML") with [CMAKE](http://www.cmake.org/) as easy as to configure with: 
+This project contains a number of open source libraries, that make the building of [libSBML](https://sbml.org/software/libsbml/ "libSBML") with [CMAKE](http://www.cmake.org/) as easy as to configure with: 
 
 	cmake -DLIBSBML_DEPENDENCY_DIR=<dir> <libSBML source dir>  
 	make  
@@ -38,22 +38,7 @@ Clone this repository to your computer or use the download link on the GitHub re
 Usage
 -----
 
-This project contains one primary [CMAKE](http://www.cmake.org/) script, that will build all libraries. So all that will be required would be the normal step, of creating a build dir, and then calling `cmake` for building. To make this process even easier there are a number of batch files, to aid in the process:
-
-	createNinja32_vs10.bat
-	createNinja32_vs11.bat
-	createNinja32_vs12.bat
-	createNinja32_vs9.bat
-	createNinja64_vs10.bat
-	createNinja64_vs11.bat
-	createNinja64_vs12.bat
-	createNinja64_vs9.bat
-	createNMake.bat
-	createNMakeVS11.bat
-	createWin64.bat
-	createWin64Debug.bat
-	createWin64vs11.bat
-
+This project contains one primary [CMAKE](http://www.cmake.org/) script, that will build all libraries. So all that will be required would be the normal step, of creating a build dir, and then calling `cmake` for building. 
 
 ### _Libraries_
 
@@ -61,12 +46,13 @@ The following open source libraries are included in this project:
 
 - [bzip2 v1.0.5](http://http://www.bzip.org/)
 - [check v0.9.8](http://check.sourceforge.net/)
-- [expat 2.1.0](http://expat.sourceforge.net/)
+- [expat 2.4.8](http://expat.sourceforge.net/)
 - [iconv v1.12](http://www.gnu.org/software/libiconv/)
-- [libxml2 v2.7.3](http://www.xmlsoft.org/)
-- [xerces-c v3.1.1](https://xerces.apache.org/xerces-c/)
+- [libxml2 v2.9.13](http://www.xmlsoft.org/)
+- [xerces-c v4.0.0](https://xerces.apache.org/xerces-c/)
 - [zlib v1.2.3](http://www.zlib.net/)
 
+expat, libxml2 and xerces have been included as git submodule. 
 
 Getting help
 ------------
@@ -80,7 +66,7 @@ License
 Each of the libraries in each of the sub folders are released under their own respective licenses. Otherwise this project (i.e.: the build scripts) are released under the BSD License: 
 
 ```
-Copyright (c) 2013-2015, Frank T. Bergmann  
+Copyright (c) 2013-2022, Frank T. Bergmann  
 All rights reserved. 
 
 Redistribution and use in source and binary forms, with or without 
