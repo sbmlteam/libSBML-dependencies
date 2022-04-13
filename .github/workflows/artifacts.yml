@@ -55,7 +55,7 @@ jobs:
         shell: bash
         run:  | 
           cmake --install . --config  ${{matrix.build_type}}
-          rm -f ${{runner.workspace}}/instdir/bin/*
+          rm -f ${{runner.workspace}}/libSBML-dependencies/instdir/bin/*
            
       - name: Upload
         if: matrix.static_runtime == 'ON'
