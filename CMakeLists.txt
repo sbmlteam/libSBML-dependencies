@@ -107,7 +107,7 @@ if(MSVC)
   endif(WITH_STATIC_RUNTIME)
 endif()
 
-
+set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 ###############################################################################
 #
 # Here we have the main configuration options for libsbml
