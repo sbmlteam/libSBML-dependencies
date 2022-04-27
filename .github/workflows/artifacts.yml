@@ -71,3 +71,21 @@ jobs:
         with:
           path: instdir/*
           name: libSBML-dependencies-${{ matrix.arch }}-${{ matrix.build_type }}
+
+  release:
+    needs: [build]
+    if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+      - name: Upload binaries to tagged release
+        # if this a tagged commit, upload binaries to github release for this tag
+        if: startsWith(github.event.ref, 'refs/tags/')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: libSBML-dependencies-*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+
