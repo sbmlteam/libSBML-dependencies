@@ -42,8 +42,9 @@ jobs:
       - name: Get Current Version
         shell: bash
         run: |
-            export LIBSBML_VERSION=`cat VERSION.txt | tr -dc '[:print:]'`
-            echo "LIBSBML_VERSION=$LIBSBML_VERSION" >> $GITHUB_ENV
+            export VERSION=`cat VERSION.txt | tr -dc '[:print:]'`
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "Version is: $VERSION"
         
       - name: Configure CMake
         shell: cmd
@@ -67,22 +68,50 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: instdir/*
-          name: libSBML-dependencies-${{ matrix.arch }}-${{ matrix.build_type }}-static
-        
+          name: libSBML-dependencies-${env.VERSION}-${{ matrix.arch }}-${{ matrix.build_type }}-static        
 
       - name: Upload
         if: matrix.static_runtime == 'OFF'
         uses: actions/upload-artifact@v2
         with:
           path: instdir/*
-          name: libSBML-dependencies-${{ matrix.arch }}-${{ matrix.build_type }}
+          name: libSBML-dependencies-${env.VERSION}-${{ matrix.arch }}-${{ matrix.build_type }}
 
   release:
     needs: [build]
     if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     steps:
+      - name: Get Current Version
+        shell: bash
+        run: |
+            export VERSION=`cat VERSION.txt | tr -dc '[:print:]'`
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
       - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x86-Debug-static
+      - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x86-Debug
+      - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x64-Debug-static
+      - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x64-Debug
+      - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x86-Release-static
+      - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x86-Release
+      - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x64-Release-static
+      - uses: actions/download-artifact@v3
+        name: 
+          libSBML-dependencies-${{env.VERSION}}-x64-Release
+          
       - name: Upload binaries to tagged release
         # if this a tagged commit, upload binaries to github release for this tag
         if: startsWith(github.event.ref, 'refs/tags/')
