@@ -46,6 +46,13 @@ jobs:
             echo "VERSION=$VERSION" >> $GITHUB_ENV
             echo "Version is: $VERSION"
         
+      - name: Remove additional xerces build steps
+        shell: bash
+        run: |
+            echo "" > xerces-c/doc/CMakeLists.txt
+            echo "" > xerces-c/tests/CMakeLists.txt
+            echo "" > xerces-c/samples/CMakeLists.txt
+        
       - name: Configure CMake
         shell: cmd
         working-directory: ${{runner.workspace}}/build
