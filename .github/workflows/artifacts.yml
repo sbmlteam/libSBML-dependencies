@@ -75,20 +75,21 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: instdir/*
-          name: libSBML-dependencies-${env.VERSION}-${{ matrix.arch }}-${{ matrix.build_type }}-static        
+          name: libSBML-dependencies-${{ env.VERSION }}-${{ matrix.arch }}-${{ matrix.build_type }}-static        
 
       - name: Upload
         if: matrix.static_runtime == 'OFF'
         uses: actions/upload-artifact@v2
         with:
           path: instdir/*
-          name: libSBML-dependencies-${env.VERSION}-${{ matrix.arch }}-${{ matrix.build_type }}
+          name: libSBML-dependencies-${{ env.VERSION }}-${{ matrix.arch }}-${{ matrix.build_type }}
 
   release:
     needs: [build]
-    if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/') || github.ref == 'refs/heads/master')
+    if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'push' && (startsWith(github.event.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Get Current Version
         shell: bash
         run: |
@@ -120,8 +121,6 @@ jobs:
           libSBML-dependencies-${{env.VERSION}}-x64-Release
           
       - name: Upload binaries to tagged release
-        # if this a tagged commit, upload binaries to github release for this tag
-        if: startsWith(github.event.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -129,4 +128,3 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
-
