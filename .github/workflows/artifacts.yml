@@ -39,6 +39,12 @@ jobs:
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
         
+      - name: Get Current Version
+        shell: bash
+        run: |
+            export LIBSBML_VERSION=`cat VERSION.txt | tr -dc '[:print:]'`
+            echo "LIBSBML_VERSION=$LIBSBML_VERSION" >> $GITHUB_ENV
+        
       - name: Configure CMake
         shell: cmd
         working-directory: ${{runner.workspace}}/build
