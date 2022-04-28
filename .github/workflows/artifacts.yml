@@ -94,12 +94,16 @@ jobs:
         run: |
             export VERSION=`cat VERSION.txt | tr -dc '[:print:]'`
             echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - uses: actions/download-artifact@v3
+
+      - name: Display structure of downloaded files
+        run: ls -R
 
       - name: Zip all artifacts again
         shell: bash
         run: |
-            for d in libSBML-dependencies-*/ ; do zip -qr "$d.zip" "$d"; done
+            for d in ./libSBML-dependencies-*/ ; do zip -qr "${d::-1}.zip" "$d"; done
             ls *.zip
 
       - name: Upload binaries to tagged release
