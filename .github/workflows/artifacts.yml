@@ -86,7 +86,6 @@ jobs:
 
   release:
     needs: [build]
-    if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -98,6 +97,7 @@ jobs:
       - uses: actions/download-artifact@v3
           
       - name: Upload binaries to tagged release
+        if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'release' && github.event.action == 'published'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -105,3 +105,16 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
+
+      - name: Update Latest Release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: latest
+          name: 'Latest LibSBML dependencies'
+          prerelease: true
+          body: 'Latest build of the libSBML Dependencies'
+          files: |
+            libSBML-dependencies-*
+            
