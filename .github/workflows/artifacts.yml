@@ -56,7 +56,7 @@ jobs:
       - name: Configure CMake
         shell: cmd
         working-directory: ${{runner.workspace}}/build
-        run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\instdir -DWITH_LIBXML=ON -DWITH_XERCES=ON -DBUILD_SHARED_LIBS:BOOL=OFF -DEXPAT_MSVC_STATIC_CRT=${{matrix.static_runtime}}  %GITHUB_WORKSPACE%
+        run: cmake -G "Ninja" -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\instdir -DWITH_LIBXML=ON -DWITH_XERCES=ON -DBUILD_SHARED_LIBS:BOOL=OFF -DEXPAT_MSVC_STATIC_CRT=${{matrix.static_runtime}} -DWITH_STATIC_RUNTIME=${{matrix.static_runtime}}  %GITHUB_WORKSPACE%
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
