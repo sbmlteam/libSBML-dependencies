@@ -95,13 +95,18 @@ jobs:
             export VERSION=`cat VERSION.txt | tr -dc '[:print:]'`
             echo "VERSION=$VERSION" >> $GITHUB_ENV
       - uses: actions/download-artifact@v3
-          
+
+      - name: Zip all artifacts again
+        shell: bash
+        run: |
+            for d in libSBML-dependencies-*/ ; do zip -qr "$d.zip" "$d"; done
+
       - name: Upload binaries to tagged release
         if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'release' && github.event.action == 'published'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: libSBML-dependencies-*
+          file: libSBML-dependencies-*.zip
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
@@ -116,5 +121,5 @@ jobs:
           prerelease: true
           body: 'Latest build of the libSBML Dependencies'
           files: |
-            libSBML-dependencies-*
+            libSBML-dependencies-*.zip
             
