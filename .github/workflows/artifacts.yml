@@ -100,6 +100,7 @@ jobs:
         shell: bash
         run: |
             for d in libSBML-dependencies-*/ ; do zip -qr "$d.zip" "$d"; done
+            ls *.zip
 
       - name: Upload binaries to tagged release
         if: github.repository == 'sbmlteam/libSBML-dependencies' && github.event_name == 'release' && github.event.action == 'published'
@@ -121,5 +122,5 @@ jobs:
           prerelease: true
           body: 'Latest build of the libSBML Dependencies'
           files: |
-            libSBML-dependencies-*.zip
+            ./*.zip
             
