@@ -150,10 +150,18 @@ if (WITH_EXPAT)
   if (WITH_STATIC_RUNTIME)
     #expat is overriding this
     set(EXPAT_MSVC_STATIC_CRT ON CACHE BOOL "Use /MT flag (static CRT) when compiling in MSVC" FORCE)
-	set(CMAKE_RELEASE_POSTFIX "" CACHE STRING "Force empty postfix" FORCE)
   endif()
 
   add_subdirectory(expat/expat)
+
+  # expat is still overrriding these, so lets force them back to empty
+  set_target_properties(expat PROPERTIES
+    DEBUG_POSTFIX ""
+    RELEASE_POSTFIX ""
+    MINSIZEREL_POSTFIX ""
+    RELWITHDEBINFO_POSTFIX ""
+  )
+
 endif()
 
 
