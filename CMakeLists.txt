@@ -150,6 +150,7 @@ if (WITH_EXPAT)
   if (WITH_STATIC_RUNTIME)
     #expat is overriding this
     set(EXPAT_MSVC_STATIC_CRT ON CACHE BOOL "Use /MT flag (static CRT) when compiling in MSVC" FORCE)
+	set(CMAKE_RELEASE_POSTFIX "" CACHE STRING "Force empty postfix" FORCE)
   endif()
 
   add_subdirectory(expat/expat)
